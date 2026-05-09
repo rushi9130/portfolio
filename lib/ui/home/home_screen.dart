@@ -9,14 +9,14 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenTypeLayout.builder(
-      mobile: (context) => HomeScreenWeb(),
+      mobile: (context) => const HomeScreenMobile(),
       desktop: (context) => HomeScreenWeb(),
       tablet: (context) {
         return OrientationBuilder(
           builder: (BuildContext context, Orientation orientation) {
             return orientation == Orientation.landscape
                 ? const HomeScreenWeb()
-                : const HomeScreenWeb();
+                : const HomeScreenMobile();
           },
         );
       },

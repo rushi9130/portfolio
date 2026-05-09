@@ -10,14 +10,14 @@ class TechnicalSkills extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenTypeLayout.builder(
-      mobile: (context) => TechnicalSkillWeb(),
+      mobile: (context) => const TechnicalSkillsMobile(),
       desktop: (context) => TechnicalSkillWeb(),
       tablet: (context) {
         return OrientationBuilder(
           builder: (BuildContext context, Orientation orientation) {
             return orientation == Orientation.landscape
                 ? const TechnicalSkillWeb()
-                : const TechnicalSkillWeb();
+                : const TechnicalSkillsMobile();
           },
         );
       },

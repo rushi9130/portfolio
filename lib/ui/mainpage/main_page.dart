@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:personal_portfolio/freamwork/controller/home/home_controller.dart';
+import 'package:personal_portfolio/ui/mainpage/mobile/mobile_main_page.dart';
 import 'package:personal_portfolio/ui/utils/helper/base_widget.dart';
 import 'package:personal_portfolio/ui/utils/widgets/common_text.dart';
 
@@ -16,6 +18,9 @@ class _MainPageState extends ConsumerState<MainPage>
     with BaseConsumerStatefulWidget {
   @override
   Widget buildPage(BuildContext context) {
+    if (!kIsWeb) {
+      return const MobileMainPage();
+    }
     final watch = ref.watch(homeController);
     final isDark = watch.isDarkOn;
     final appBarBg = isDark ? const Color(0xFF0A182C) : const Color(0xFFEAF1FB);
@@ -102,6 +107,7 @@ class _MainPageState extends ConsumerState<MainPage>
           body: PageView.builder(
             controller: watch.pageController,
             scrollDirection: Axis.vertical,
+            physics: const BouncingScrollPhysics(),
             onPageChanged: (ind) {
               if (ind > 0) {
                 watch.chnageIndex(ind - 1);

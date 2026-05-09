@@ -10,14 +10,14 @@ class MyJourney extends StatelessWidget with BaseStatelessWidget {
   @override
   Widget buildPage(BuildContext context) {
     return ScreenTypeLayout.builder(
-      mobile: (context) => MyJourneyWeb(),
+      mobile: (context) => const MyJouneyMobile(),
       desktop: (context) => MyJourneyWeb(),
       tablet: (context) {
         return OrientationBuilder(
           builder: (BuildContext context, Orientation orientation) {
             return orientation == Orientation.landscape
                 ? const MyJourneyWeb()
-                : const MyJourneyWeb();
+                : const MyJouneyMobile();
           },
         );
       },

@@ -9,14 +9,14 @@ class MyProject extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenTypeLayout.builder(
-      mobile: (context) => MyProjectWeb(),
+      mobile: (context) => const MyProjectMobile(),
       desktop: (context) => MyProjectWeb(),
       tablet: (context) {
         return OrientationBuilder(
           builder: (BuildContext context, Orientation orientation) {
             return orientation == Orientation.landscape
                 ? const MyProjectWeb()
-                : const MyProjectWeb();
+                : const MyProjectMobile();
           },
         );
       },

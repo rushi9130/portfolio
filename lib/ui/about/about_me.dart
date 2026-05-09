@@ -10,14 +10,14 @@ class AboutMeScreen extends StatelessWidget with BaseStatelessWidget {
   @override
   Widget buildPage(BuildContext context) {
     return ScreenTypeLayout.builder(
-      mobile: (context) => AboutMeWeb(),
+      mobile: (context) => const AboutMeMobile(),
       desktop: (context) => AboutMeWeb(),
       tablet: (context) {
         return OrientationBuilder(
           builder: (BuildContext context, Orientation orientation) {
             return orientation == Orientation.landscape
                 ? const AboutMeWeb()
-                : const AboutMeWeb();
+                : const AboutMeMobile();
           },
         );
       },

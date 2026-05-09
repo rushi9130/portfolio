@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:injectable/injectable.dart';
@@ -77,14 +78,16 @@ class HomeController extends ChangeNotifier {
   /// current selected Index
   int watchIndex = 0;
   void chnageIndex(int newIndex) {
-    if (newIndex == 2) {
+    if (watchIndex == newIndex) return;
+    print("Change the index : $newIndex");
+    if (newIndex == 1) {
       slectWorkAction = 0;
     } else if (newIndex == 5) {
       slectWorkAction = 1;
     } else {
       slectWorkAction = -1;
     }
-
+    print("Watch index : $newIndex");
     watchIndex = newIndex;
     jumpPage(watchIndex);
   }
@@ -92,13 +95,16 @@ class HomeController extends ChangeNotifier {
   /// page controller
   final PageController pageController = PageController();
 
-  void jumpPage(int page){
-    // pageController.jumpToPage(page+1);
-    pageController.animateToPage(
-      page+1,
-      duration: const Duration(milliseconds: 100),
-      curve: Curves.bounceInOut,
-    );
+  void jumpPage(int page) {
+    print("object");
+    if (pageController.hasClients) {
+      print("Animation happend at : $page");
+      pageController.animateToPage(
+        page + 1,
+        duration: const Duration(milliseconds: 800),
+        curve: Curves.easeInOutCubic,
+      );
+    }
     notifyListeners();
   }
 
@@ -132,14 +138,36 @@ class HomeController extends ChangeNotifier {
   }
 
   int slectWorkAction = -1;
+
+  /// Android vertical [PageView]: target page index (0=Home … 6=Contact). Consumed by [MobileMainPage].
+  int? mobileVerticalPageRequest;
+
+  void clearMobileVerticalPageRequest() {
+    mobileVerticalPageRequest = null;
+  }
+
+  /// Call when mobile pager lands on Home so “View Work / Connect” highlight clears.
+  void syncMobilePagerAtHome() {
+    slectWorkAction = -1;
+    notifyListeners();
+  }
+
   void changeWorkAction(int newIndex) {
+    if (!kIsWeb) {
+      // Mobile: 2 = MyProjectMobile, 6 = ContactMobile
+      mobileVerticalPageRequest = newIndex == 0 ? 2 : 6;
+      slectWorkAction = newIndex;
+      notifyListeners();
+      return;
+    }
     if (newIndex == 0) {
-      chnageIndex(2);
+      chnageIndex(1); // Web: category 1 = Projects
     } else {
-      chnageIndex(5);
+      chnageIndex(5); // Web: category 5 = Contact
     }
     slectWorkAction = newIndex;
-
+    print("New Index : $slectWorkAction");
+    notifyListeners();
   }
 
   /// About Me Screen
@@ -283,8 +311,6 @@ class HomeController extends ChangeNotifier {
         } else {
           homeImageUrl = _stringValue(data['homeImageUrl'], homeImageUrl);
         }
-        print("");
-
 
         // Keep backward compatibility if projects are still inside content doc.
         projects = _projectsList(data['projects'], projects);

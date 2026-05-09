@@ -38,8 +38,8 @@ class ProjectDialog extends ConsumerWidget {
       insetPadding: const EdgeInsets.all(24),
       child: ConstrainedBox(
         constraints: BoxConstraints(
-          maxWidth: (context.width * 0.74).clamp(360, 980),
-          maxHeight: (context.height * 0.82).clamp(320, 760),
+          maxWidth: ((context.width - 32) * 0.92).clamp(280.0, 980),
+          maxHeight: (context.height * 0.85).clamp(280.0, 760),
         ),
         child: Container(
           padding: const EdgeInsets.all(24),
@@ -103,7 +103,7 @@ class ProjectDialog extends ConsumerWidget {
                             itemCount: projectImages.length,
                             separatorBuilder: (_, _) => const SizedBox(width: 10),
                             itemBuilder: (context, index) {
-                              final imageUrl = projectImages[index].url?.trim() ?? '';
+                              final imageUrl = projectImages[index].url.trim();
 
                               return ClipRRect(
                                 borderRadius: BorderRadius.circular(12),

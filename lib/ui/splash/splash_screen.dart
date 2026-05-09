@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:personal_portfolio/ui/home/home_screen.dart';
+import 'package:personal_portfolio/ui/mainpage/main_page.dart';
 import 'package:personal_portfolio/ui/splash/mobile/mobile_splash_screen.dart';
 import 'package:personal_portfolio/ui/splash/web/splash_web_screen.dart';
 import 'package:personal_portfolio/ui/utils/helper/base_widget.dart';
@@ -21,12 +21,11 @@ class _SplashScreenState extends State<SplashScreen> with BaseStatefulWidget {
 
     SchedulerBinding.instance.addPostFrameCallback((timer) {
       Future.delayed(Duration(seconds: 3), () {
+        if (!mounted) return;
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) {
-              return HomeScreen();
-            },
+            builder: (context) => const MainPage(),
           ),
         );
       });
@@ -36,14 +35,14 @@ class _SplashScreenState extends State<SplashScreen> with BaseStatefulWidget {
   @override
   Widget buildPage(BuildContext context) {
     return ScreenTypeLayout.builder(
-      mobile: (context) => SplashWebScreen(),
+      mobile: (context) => const MobileSplashScreen(),
       desktop: (context) => SplashWebScreen(),
       tablet: (context) {
         return OrientationBuilder(
           builder: (BuildContext context, Orientation orientation) {
             return orientation == Orientation.landscape
                 ? const SplashWebScreen()
-                : const SplashWebScreen();
+                : const MobileSplashScreen();
           },
         );
       },
