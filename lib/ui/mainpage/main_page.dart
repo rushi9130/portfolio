@@ -6,6 +6,7 @@ import 'package:personal_portfolio/freamwork/controller/home/home_controller.dar
 import 'package:personal_portfolio/ui/mainpage/mobile/mobile_main_page.dart';
 import 'package:personal_portfolio/ui/utils/helper/base_widget.dart';
 import 'package:personal_portfolio/ui/utils/widgets/common_text.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 
 class MainPage extends ConsumerStatefulWidget {
   const MainPage({super.key});
@@ -18,17 +19,29 @@ class _MainPageState extends ConsumerState<MainPage>
     with BaseConsumerStatefulWidget {
   @override
   Widget buildPage(BuildContext context) {
-    if (!kIsWeb) {
-      return const MobileMainPage();
-    }
+    return ScreenTypeLayout.builder(
+      mobile: (context) => const MobileMainPage(),
+      tablet: (context) => const MobileMainPage(),
+      desktop: (context) => _buildWebLayout(context),
+    );
+  }
+
+  Widget _buildWebLayout(BuildContext context) {
     final watch = ref.watch(homeController);
     final isDark = watch.isDarkOn;
     final appBarBg = isDark ? const Color(0xFF0A182C) : const Color(0xFFEAF1FB);
     final primaryText = isDark ? Colors.white : const Color(0xFF102A43);
-    final accent = const Color(0xFFF5C542);
+    const accent = Color(0xFFF5C542);
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final width = constraints.maxWidth;
+        // If the layout builder ever gets a small width (e.g. browser resize), 
+        // ScreenTypeLayout should have already handled it, but this is a safety.
+        if (width < 900) {
+          return const MobileMainPage();
+        }
+
         final titleSize = width >= 1600 ? 22.0 : width >= 1200 ? 19.0 : 16.0;
         final navSize = width >= 1600 ? 15.0 : width >= 1200 ? 14.0 : 12.5;
         final navMaxWidth = (width * 0.52).clamp(260.0, 900.0);

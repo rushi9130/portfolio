@@ -153,20 +153,20 @@ class HomeController extends ChangeNotifier {
   }
 
   void changeWorkAction(int newIndex) {
-    if (!kIsWeb) {
-      // Mobile: 2 = MyProjectMobile, 6 = ContactMobile
-      mobileVerticalPageRequest = newIndex == 0 ? 2 : 6;
-      slectWorkAction = newIndex;
-      notifyListeners();
-      return;
-    }
+    slectWorkAction = newIndex;
+    
+    // 1. Handle Web Layout jump
     if (newIndex == 0) {
       chnageIndex(1); // Web: category 1 = Projects
     } else {
       chnageIndex(5); // Web: category 5 = Contact
     }
-    slectWorkAction = newIndex;
-    print("New Index : $slectWorkAction");
+
+    // 2. Handle Mobile Layout jump (sets request for MobileMainPage listener)
+    // Mobile: 2 = MyProjectMobile, 6 = ContactMobile
+    mobileVerticalPageRequest = newIndex == 0 ? 2 : 6;
+    
+    print("New Index for action : $slectWorkAction");
     notifyListeners();
   }
 
