@@ -11,14 +11,14 @@ class Testimonial extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenTypeLayout.builder(
-      mobile: (context) => TestimonialMobile(),
+      mobile: (context) => TestimonialWeb(),
       desktop: (context) => TestimonialWeb(),
       tablet: (context) {
         return OrientationBuilder(
           builder: (BuildContext context, Orientation orientation) {
             return orientation == Orientation.landscape
                 ? const TestimonialWeb()
-                : const TestimonialMobile();
+                : const TestimonialWeb();
           },
         );
       },

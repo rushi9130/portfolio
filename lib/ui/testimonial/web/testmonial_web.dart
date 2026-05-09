@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:personal_portfolio/freamwork/controller/home/home_controller.dart';
-import 'package:personal_portfolio/freamwork/utils/extension/align_extension.dart';
 import 'package:personal_portfolio/freamwork/utils/extension/context_extension.dart';
 import 'package:personal_portfolio/ui/utils/helper/base_widget.dart';
 import 'package:personal_portfolio/ui/utils/widgets/background_animation.dart';
@@ -20,23 +19,29 @@ class _TestimonialWebState extends ConsumerState<TestimonialWeb> with BaseConsum
   Widget buildPage(BuildContext context) {
 
     final watch = ref.watch(homeController);
+    final isDark = watch.isDarkOn;
+    final bgGradient = isDark
+        ? const [Color(0xFF0A1628), Color(0xFF0E2239), Color(0xFF132F4C)]
+        : const [Color(0xFFF7FAFC), Color(0xFFEAF1FB), Color(0xFFDDE9F7)];
+    final textColor = isDark ? Colors.white : const Color(0xFF102A43);
 
     return Container(
       height: context.height,
       width: context.width,
 
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF0A1628), Color(0xFF0E2239), Color(0xFF132F4C)],
-        ),
-      ),
+      decoration: BoxDecoration(gradient: LinearGradient(colors: bgGradient)),
       child: Stack(
         children: [
           /// background dots
           SizedBox(
             width: context.width,
             height: context.height,
-            child: Opacity(opacity: 0.8, child: ParticleBackground()),
+            child: Opacity(
+              opacity: isDark ? 0.8 : 0.45,
+              child: ParticleBackground(
+                particleColor: isDark ? Colors.orange : const Color(0xFF8FA7BF),
+              ),
+            ),
           ),
 
           Container(
@@ -51,7 +56,7 @@ class _TestimonialWebState extends ConsumerState<TestimonialWeb> with BaseConsum
                 const Text(
                   '“',
                   style: TextStyle(
-                    fontSize: 64,
+                    fontSize: 44,
                     color: Color(0xFFF5C542),
                     height: 0.8,
                   ),
@@ -61,7 +66,7 @@ class _TestimonialWebState extends ConsumerState<TestimonialWeb> with BaseConsum
                 Flexible(
                   child: PageView.builder(
                     itemCount: watch.testimonials.length,
-                    onPageChanged: (i) => setState(() => watch.currentTestimonialIndex = i),
+                    onPageChanged: watch.changeTestimonialIndex,
                     itemBuilder: (context, index) {
                       final t = watch.testimonials[index];
                       return Center(
@@ -75,9 +80,9 @@ class _TestimonialWebState extends ConsumerState<TestimonialWeb> with BaseConsum
                               Text(
                                 t.text,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontSize: 22,
-                                  color: Colors.white70,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: textColor.withValues(alpha: 0.8),
                                   fontStyle: FontStyle.italic,
                                   height: 1.6,
                                 ),
@@ -87,16 +92,16 @@ class _TestimonialWebState extends ConsumerState<TestimonialWeb> with BaseConsum
                                 t.role,
                                 style: const TextStyle(
                                   color: Color(0xFFF5C542),
-                                  fontSize: 18,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               const SizedBox(height: 6),
                               Text(
                                 t.company,
-                                style: const TextStyle(
-                                  color: Colors.white60,
-                                  fontSize: 15,
+                                style: TextStyle(
+                                  color: textColor.withValues(alpha: 0.65),
+                                  fontSize: 12.5,
                                 ),
                               ),
                             ],
@@ -121,7 +126,7 @@ class _TestimonialWebState extends ConsumerState<TestimonialWeb> with BaseConsum
                         shape: BoxShape.circle,
                         color: index == watch.currentTestimonialIndex
                             ? const Color(0xFFF5C542)
-                            : Colors.white24,
+                            : textColor.withValues(alpha: 0.24),
                       ),
                     ),
                   ),

@@ -12,14 +12,14 @@ class Contact extends StatelessWidget with BaseStatelessWidget {
   @override
   Widget buildPage(BuildContext context) {
     return ScreenTypeLayout.builder(
-      mobile: (context) => ContactMobile(),
+      mobile: (context) => ContactWeb(),
       desktop: (context) => ContactWeb(),
       tablet: (context) {
         return OrientationBuilder(
           builder: (BuildContext context, Orientation orientation) {
             return orientation == Orientation.landscape
                 ? const ContactWeb()
-                : const ContactMobile();
+                : const ContactWeb();
           },
         );
       },
