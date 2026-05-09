@@ -1,0 +1,118 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:personal_portfolio/freamwork/controller/home/home_controller.dart';
+import 'package:personal_portfolio/ui/utils/helper/base_widget.dart';
+import 'package:personal_portfolio/ui/utils/widgets/common_text.dart';
+
+class MainPage extends ConsumerStatefulWidget {
+  const MainPage({super.key});
+
+  @override
+  ConsumerState<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends ConsumerState<MainPage>
+    with BaseConsumerStatefulWidget {
+  @override
+  Widget buildPage(BuildContext context) {
+    final watch = ref.watch(homeController);
+    final isDark = watch.isDarkOn;
+    final appBarBg = isDark ? const Color(0xFF0A182C) : const Color(0xFFEAF1FB);
+    final primaryText = isDark ? Colors.white : const Color(0xFF102A43);
+    final accent = const Color(0xFFF5C542);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        final titleSize = width >= 1600 ? 22.0 : width >= 1200 ? 19.0 : 16.0;
+        final navSize = width >= 1600 ? 15.0 : width >= 1200 ? 14.0 : 12.5;
+        final navMaxWidth = (width * 0.52).clamp(260.0, 900.0);
+
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: appBarBg,
+            scrolledUnderElevation: 0,
+            title: RichText(
+              text: TextSpan(
+                style: TextStyle(
+                  fontSize: titleSize,
+                  color: primaryText,
+                  wordSpacing: 1.2,
+                  letterSpacing: 1.3,
+                  fontWeight: FontWeight.w700,
+                ),
+                children: [
+                  TextSpan(text: '${watch.firstName} '),
+                  TextSpan(text: watch.lastName, style: const TextStyle(color: Color(0xFFF5C542))),
+                ],
+              ),
+            ),
+            actions: [
+              ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: navMaxWidth),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: List.generate(watch.category.length, (index) {
+                      final category = watch.category[index];
+                      final isSelected = watch.currentMouseReginIndex == index || watch.watchIndex == index;
+                      return MouseRegion(
+                        onEnter: (v) => watch.chnageMouseReginIndex(index),
+                        onExit: (v) => watch.chnageMouseReginIndex(-1),
+                        child: GestureDetector(
+                          onTap: () => watch.chnageIndex(index),
+                          child: Container(
+                            height: AppBar().preferredSize.height * 0.6,
+                            decoration: isSelected
+                                ? BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(color: accent, width: 2.0),
+                                    ),
+                                  )
+                                : null,
+                            alignment: Alignment.center,
+                            margin: EdgeInsets.only(right: 20.w),
+                            child: CommonText(
+                              title: category,
+                              textStyle: TextStyle(
+                                color: isSelected ? accent : primaryText,
+                                fontSize: navSize,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+              ),
+              watch.isDarkOn
+                  ? GestureDetector(
+                      onTap: () => watch.changeTheme(false),
+                      child: Icon(Icons.dark_mode, color: primaryText),
+                    )
+                  : GestureDetector(
+                      onTap: () => watch.changeTheme(true),
+                      child: Icon(Icons.dark_mode_outlined, color: primaryText),
+                    ),
+              SizedBox(width: 12.w),
+            ],
+          ),
+          body: PageView.builder(
+            controller: watch.pageController,
+            scrollDirection: Axis.vertical,
+            onPageChanged: (ind) {
+              if (ind > 0) {
+                watch.chnageIndex(ind - 1);
+              }
+            },
+            pageSnapping: false,
+            itemCount: watch.screens.length,
+            itemBuilder: (context, index) => watch.screens[index],
+          ),
+        );
+      },
+    );
+  }
+}
