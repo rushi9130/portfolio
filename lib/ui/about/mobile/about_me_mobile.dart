@@ -14,13 +14,15 @@ class AboutMeMobile extends ConsumerWidget {
     return MobileScrollableSection(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 30),
       children: [
-        RichText(
-          text: TextSpan(
-            style: TextStyle(fontSize: 30, color: textColor, fontWeight: FontWeight.w700),
-            children: [
-              TextSpan(text: watch.aboutTitlePrefix),
-              TextSpan(text: watch.aboutTitleAccent, style: const TextStyle(color: Color(0xFFF5C542))),
-            ],
+        Center(
+          child: RichText(
+            text: TextSpan(
+              style: TextStyle(fontSize: 30, color: textColor, fontWeight: FontWeight.w700),
+              children: [
+                TextSpan(text: watch.aboutTitlePrefix),
+                TextSpan(text: watch.aboutTitleAccent, style: const TextStyle(color: Color(0xFFF5C542))),
+              ],
+            ),
           ),
         ),
         const SizedBox(height: 14),

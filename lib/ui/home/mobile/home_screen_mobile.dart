@@ -19,20 +19,36 @@ class HomeScreenMobile extends ConsumerWidget {
       children: [
         Center(
           child: Container(
-            clipBehavior: Clip.antiAlias,
             width: 300.h,
             height: 300.h,
+            clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: accent, width: 2),
+              border: Border.all(color: accent, width: 1),
             ),
-            child: watch.homeImageUrl.isNotEmpty
-                ? Image.network(
-                    watch.homeImageUrl,
+            child: InteractiveViewer(
+              minScale: 1,
+              maxScale: 5,
+              child: watch.homeImageUrl.isNotEmpty
+                  ? Image.network(
+                watch.homeImageUrl,
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+                errorBuilder: (_, __, ___) {
+                  return Assets.images.photo.image(
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Assets.images.photo.image(fit: BoxFit.cover),
-                  )
-                : Assets.images.photo.image(fit: BoxFit.cover),
+                    width: double.infinity,
+                    height: double.infinity,
+                  );
+                },
+              )
+                  : Assets.images.photo.image(
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+              ),
+            ),
           ),
         ),
         const SizedBox(height: 18),

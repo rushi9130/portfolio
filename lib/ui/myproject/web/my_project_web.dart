@@ -23,10 +23,8 @@ class _MyProjectWebState extends ConsumerState<MyProjectWeb>
   void initState() {
     // TODO: implement initState
     super.initState();
-
     SchedulerBinding.instance.addPostFrameCallback((timer) {
       final read = ref.read(homeController);
-
       read.addFilter();
     });
   }

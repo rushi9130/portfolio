@@ -1,15 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:personal_portfolio/freamwork/controller/home/home_controller.dart';
 import 'package:personal_portfolio/ui/myproject/helper/show_project_view_dialog.dart';
+import 'package:personal_portfolio/ui/utils/helper/base_widget.dart';
 import 'package:personal_portfolio/ui/utils/widgets/mobile_scrollable_section.dart';
 
-class MyProjectMobile extends ConsumerWidget {
+class MyProjectMobile extends ConsumerStatefulWidget {
+
   const MyProjectMobile({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MyProjectMobile> createState() {
+    return _myProjectMobileState();
+  }
+
+}
+
+class _myProjectMobileState extends ConsumerState<MyProjectMobile> with BaseConsumerStatefulWidget {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((timer) {
+      final read = ref.read(homeController);
+      read.addFilter();
+    });
+  }
+
+  @override
+  Widget buildPage(BuildContext context) {
     final watch = ref.watch(homeController);
 
     return MobileScrollableSection(
