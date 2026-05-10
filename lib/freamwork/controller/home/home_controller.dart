@@ -76,10 +76,17 @@ class HomeController extends ChangeNotifier {
   }
 
   /// current selected Index
-  int watchIndex = 0;
-  void chnageIndex(int newIndex) {
+  int watchIndex = -1;
+  bool _isProgrammaticJump = false;
+
+  void chnageIndex(int newIndex, {bool isManualScroll = false}) {
     if (watchIndex == newIndex) return;
-    print("Change the index : $newIndex");
+
+    // If we're currently animating to a page, ignore scroll sync-backs 
+    // that might try to reset the index to the starting page.
+    if (isManualScroll && _isProgrammaticJump) return;
+
+    print("Change the index : $newIndex (Manual: $isManualScroll)");
     if (newIndex == 1) {
       slectWorkAction = 0;
     } else if (newIndex == 5) {
@@ -87,25 +94,29 @@ class HomeController extends ChangeNotifier {
     } else {
       slectWorkAction = -1;
     }
-    print("Watch index : $newIndex");
     watchIndex = newIndex;
-    jumpPage(watchIndex);
+    if (!isManualScroll) {
+      jumpPage(watchIndex);
+    }
+    notifyListeners();
   }
 
   /// page controller
   final PageController pageController = PageController();
 
   void jumpPage(int page) {
-    print("object");
     if (pageController.hasClients) {
-      print("Animation happend at : $page");
-      pageController.animateToPage(
+      _isProgrammaticJump = true;
+      pageController
+          .animateToPage(
         page + 1,
         duration: const Duration(milliseconds: 800),
         curve: Curves.easeInOutCubic,
-      );
+      )
+          .then((_) {
+        _isProgrammaticJump = false;
+      });
     }
-    notifyListeners();
   }
 
   /// Page Categories
@@ -149,6 +160,7 @@ class HomeController extends ChangeNotifier {
   /// Call when mobile pager lands on Home so “View Work / Connect” highlight clears.
   void syncMobilePagerAtHome() {
     slectWorkAction = -1;
+    watchIndex = -1;
     notifyListeners();
   }
 

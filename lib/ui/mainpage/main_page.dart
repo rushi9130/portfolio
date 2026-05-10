@@ -50,19 +50,27 @@ class _MainPageState extends ConsumerState<MainPage>
           appBar: AppBar(
             backgroundColor: appBarBg,
             scrolledUnderElevation: 0,
-            title: RichText(
-              text: TextSpan(
-                style: TextStyle(
-                  fontSize: titleSize,
-                  color: primaryText,
-                  wordSpacing: 1.2,
-                  letterSpacing: 1.3,
-                  fontWeight: FontWeight.w700,
+            title: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: () => watch.chnageIndex(-1),
+                child: RichText(
+                  text: TextSpan(
+                    style: TextStyle(
+                      fontSize: titleSize,
+                      color: primaryText,
+                      wordSpacing: 1.2,
+                      letterSpacing: 1.3,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    children: [
+                      TextSpan(text: '${watch.firstName} '),
+                      TextSpan(
+                          text: watch.lastName,
+                          style: const TextStyle(color: Color(0xFFF5C542))),
+                    ],
+                  ),
                 ),
-                children: [
-                  TextSpan(text: '${watch.firstName} '),
-                  TextSpan(text: watch.lastName, style: const TextStyle(color: Color(0xFFF5C542))),
-                ],
               ),
             ),
             actions: [
@@ -122,11 +130,9 @@ class _MainPageState extends ConsumerState<MainPage>
             scrollDirection: Axis.vertical,
             physics: const BouncingScrollPhysics(),
             onPageChanged: (ind) {
-              if (ind > 0) {
-                watch.chnageIndex(ind - 1);
-              }
+              watch.chnageIndex(ind - 1, isManualScroll: true);
             },
-            pageSnapping: false,
+            pageSnapping: true,
             itemCount: watch.screens.length,
             itemBuilder: (context, index) => watch.screens[index],
           ),
