@@ -27,6 +27,7 @@ class _myProjectMobileState extends ConsumerState<MyProjectMobile> with BaseCons
     SchedulerBinding.instance.addPostFrameCallback((timer) {
       final read = ref.read(homeController);
       read.addFilter();
+      print("Hello");
     });
   }
 
