@@ -60,7 +60,7 @@ class ProjectDialog extends ConsumerWidget {
           child: Stack(
             children: [
               Padding(
-                padding: const EdgeInsets.only(right: 36),
+                padding: const EdgeInsets.only(right: 1),
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

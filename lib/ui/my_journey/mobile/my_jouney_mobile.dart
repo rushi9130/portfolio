@@ -42,34 +42,96 @@ class _MyJouneyMobileState extends ConsumerState<MyJouneyMobile> {
 
         for (var i = 0; i < entries.length; i++) ...[
           if (i > 0) const SizedBox(height: 10),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(14),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(entries[i].duration, style: const TextStyle(color: Color(0xFFF5C542))),
-                  const SizedBox(height: 6),
-                  Text(
-                    entries[i].title,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: titleColor),
+          /// Card
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: isDark
+                  ? const Color(0xFF0F2235)
+                  : Colors.white,
+              borderRadius: BorderRadius.circular(18),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(
+                    alpha: isDark ? 0.35 : 0.08,
                   ),
-                  Text(entries[i].company, style: TextStyle(color: subtitle)),
-                  const SizedBox(height: 8),
-                  ...entries[i].points.map(
-                    (p) => Padding(
-                      padding: const EdgeInsets.only(bottom: 6),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('• '),
-                          Expanded(child: Text(p, style: TextStyle(color: subtitle))),
-                        ],
-                      ),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+
+                Text(
+                  entries[i].duration,
+                  style: const TextStyle(
+                    color: Color(0xFFF5C542),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                Text(
+                  entries[i].title,
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w700,
+                    color: titleColor,
+                  ),
+                ),
+
+                const SizedBox(height: 4),
+
+                Text(
+                  entries[i].company,
+                  style: TextStyle(
+                    color: subtitle,
+                    fontSize: 13,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+
+                const SizedBox(height: 14),
+
+                ...entries[i].points.map(
+                      (p) => Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(top: 2),
+                          child: Text(
+                            '▸',
+                            style: TextStyle(
+                              color: Color(0xFFF5C542),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(width: 8),
+
+                        Expanded(
+                          child: Text(
+                            p,
+                            style: TextStyle(
+                              color: subtitle,
+                              height: 1.5,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],

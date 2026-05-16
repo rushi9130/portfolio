@@ -15,8 +15,8 @@ import 'package:lottie/lottie.dart' as _lottie;
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
-  /// File path: assets/images/photo.jpg
-  AssetGenImage get photo => const AssetGenImage('assets/images/photo.jpg');
+  /// File path: assets/images/photo.png
+  AssetGenImage get photo => const AssetGenImage('assets/images/photo.png');
 
   /// List of all assets
   List<AssetGenImage> get values => [photo];

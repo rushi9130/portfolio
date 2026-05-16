@@ -52,10 +52,28 @@ class HomeScreenMobile extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 18),
-        Text(
-          '${watch.firstName} ${watch.lastName}',
+        // Text(
+        //   '${watch.firstName} ${watch.lastName}',
+        //   textAlign: TextAlign.center,
+        //   style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700, color: textColor),
+        // ),
+        RichText(
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700, color: textColor),
+          text: TextSpan(
+            style: TextStyle(
+              fontSize: 33,
+              color: textColor,
+              wordSpacing: 2,
+              fontWeight: FontWeight.bold,
+            ),
+            children: [
+              TextSpan(text: '${watch.firstName} '),
+              TextSpan(
+                text: watch.lastName,
+                style: TextStyle(color: accent),
+              ),
+            ],
+          ),
         ),
         const SizedBox(height: 10),
         Text(

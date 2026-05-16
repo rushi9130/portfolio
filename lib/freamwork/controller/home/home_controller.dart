@@ -265,6 +265,11 @@ class HomeController extends ChangeNotifier {
   final subjectController = TextEditingController();
   final messageController = TextEditingController();
 
+  final nameFocus = FocusNode();
+  final emailFocus = FocusNode();
+  final subjectFocus = FocusNode();
+  final messageFocus = FocusNode();
+
   /// all this data come form firebase
   String myLocation = PortfolioContent.myLocation;
   String phoneNumber = PortfolioContent.phoneNumber;
@@ -534,9 +539,52 @@ class HomeController extends ChangeNotifier {
     if (nameController.text.isEmpty ||
         emailController.text.isEmpty ||
         messageController.text.isEmpty) {
+
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please fill all required fields")),
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: const Color(0xFF102A43),
+          elevation: 10,
+          margin: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 16,
+          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 18,
+            vertical: 14,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+            side: const BorderSide(
+              color: Color(0xFFF5C542),
+              width: 1.2,
+            ),
+          ),
+          duration: const Duration(seconds: 3),
+          content: Row(
+            children: const [
+              Icon(
+                Icons.warning_amber_rounded,
+                color: Color(0xFFF5C542),
+                size: 26,
+              ),
+              SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  "Please fill all required fields",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.3,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       );
+
       return;
     }
 
@@ -557,7 +605,52 @@ class HomeController extends ChangeNotifier {
       notifyListeners();
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to send message: $e")),
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: const Color(0xFF102A43),
+          elevation: 10,
+          margin: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 16,
+          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 18,
+            vertical: 14,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+            side: const BorderSide(
+              color: Colors.redAccent,
+              width: 1.2,
+            ),
+          ),
+          duration: const Duration(seconds: 4),
+          content: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(
+                Icons.error_outline_rounded,
+                color: Colors.redAccent,
+                size: 26,
+              ),
+
+              const SizedBox(width: 12),
+
+              Expanded(
+                child: Text(
+                  "Failed to send message\n$e",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.w600,
+                    height: 1.4,
+                    letterSpacing: 0.2,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       );
       return;
     }
@@ -571,7 +664,50 @@ class HomeController extends ChangeNotifier {
     messageController.clear();
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Message sent successfully")),
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: const Color(0xFF102A43),
+        elevation: 10,
+        margin: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 16,
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 18,
+          vertical: 14,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+          side: const BorderSide(
+            color: Color(0xFFF5C542),
+            width: 1.2,
+          ),
+        ),
+        duration: const Duration(seconds: 3),
+        content: const Row(
+          children: [
+            Icon(
+              Icons.check_circle_rounded,
+              color: Color(0xFFF5C542),
+              size: 26,
+            ),
+
+            SizedBox(width: 12),
+
+            Expanded(
+              child: Text(
+                "Message sent successfully",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.3,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

@@ -57,46 +57,75 @@ class _myProjectMobileState extends ConsumerState<MyProjectMobile> with BaseCons
         ),
         SizedBox(height: 40.h),
 
-        SizedBox(
-          height: 42,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            physics: const ClampingScrollPhysics(),
-            child: Row(
-              children: List.generate(
-                watch.myProject.length,
-                (index) {
-                  final selected = watch.currentSelectProjectIndex == index;
-                  return Padding(
-                    padding: EdgeInsets.only(right: index < watch.myProject.length - 1 ? 8 : 0),
-                    child: ChoiceChip(
-                      selected: selected,
-                      onSelected: (_) => watch.chnageCurrentSelectProjectIndex(index),
-                      label: Text(watch.myProject[index]),
-                    ),
-                  );
-                },
+        Center(
+          child: SizedBox(
+            height: 42,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: const ClampingScrollPhysics(),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  watch.myProject.length,
+                  (index) {
+                    final selected = watch.currentSelectProjectIndex == index;
+                    return Padding(
+                      padding: EdgeInsets.only(right: index < watch.myProject.length - 1 ? 8 : 0),
+                      child: ChoiceChip(
+                        selected: selected,
+                        onSelected: (_) => watch.chnageCurrentSelectProjectIndex(index),
+                        label: Text(watch.myProject[index]),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ),
         ),
         const SizedBox(height: 12),
-        ...watch.filterProjects.map(
-          (item) => Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: Card(
-              child: ListTile(
-                contentPadding: const EdgeInsets.all(12),
-                title: Text(item.projectName),
-                subtitle: Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Text(item.projectDis, maxLines: 3, overflow: TextOverflow.ellipsis),
-                ),
-                trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
-                onTap: () => showProjectDialog(context, item),
+        watch.filterProjects.isEmpty
+            ? Padding(
+          padding: const EdgeInsets.only(top: 40),
+          child: Center(
+            child: Text(
+              "No ${watch.currentSelectProjectIndex == 1 ? "Mobile" : "Web"} Projects Available",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: watch.isDarkOn
+                    ? Colors.white70
+                    : const Color(0xFF102A43),
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
+        )
+            : Column(
+          children: watch.filterProjects.map(
+                (item) => Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Card(
+                child: ListTile(
+                  contentPadding: const EdgeInsets.all(12),
+                  title: Text(item.projectName),
+                  subtitle: Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      item.projectDis,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  trailing: const Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 16,
+                  ),
+                  onTap: () => showProjectDialog(context, item),
+                ),
+              ),
+            ),
+          ).toList(),
         ),
       ],
     );

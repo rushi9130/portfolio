@@ -16,6 +16,69 @@ class ContactWeb extends ConsumerStatefulWidget {
 }
 
 class _ContactWebState extends ConsumerState<ContactWeb> with BaseConsumerStatefulWidget {
+
+
+
+  Widget _input(
+      TextEditingController controller,
+      String hint, {
+        int maxLines = 1,
+        FocusNode? focusNode,
+        FocusNode? nextFocus,
+        TextInputAction? textInputAction,
+      }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: TextField(
+        controller: controller,
+        focusNode: focusNode,
+        textInputAction: textInputAction,
+        maxLines: maxLines,
+
+        onSubmitted: (_) {
+          if (nextFocus != null) {
+            FocusScope.of(context).requestFocus(nextFocus);
+          } else {
+            FocusScope.of(context).unfocus();
+          }
+        },
+
+        style: TextStyle(
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Colors.white
+              : const Color(0xFF102A43),
+        ),
+
+        cursorColor: const Color(0xFFD4AF37),
+
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: TextStyle(
+            color: (
+                Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : const Color(0xFF102A43)
+            ).withValues(alpha: 0.6),
+          ),
+
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white24
+                  : const Color(0xFFB6C2CF),
+            ),
+          ),
+
+          focusedBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: Color(0xFFD4AF37),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget buildPage(BuildContext context) {
     final watch = ref.watch(homeController);
@@ -154,7 +217,7 @@ class _ContactWebState extends ConsumerState<ContactWeb> with BaseConsumerStatef
             ),
           ],
         ),
-        SizedBox(height: 24.h),
+        SizedBox(height: 30.h),
         Text(
           "📍 ${watch.myLocation}",
           style: TextStyle(
@@ -169,6 +232,7 @@ class _ContactWebState extends ConsumerState<ContactWeb> with BaseConsumerStatef
   }
 
   Widget _buildForm(BuildContext context, HomeController watch, double maxWidth) {
+
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -177,10 +241,37 @@ class _ContactWebState extends ConsumerState<ContactWeb> with BaseConsumerStatef
       ),
       child: Column(
         children: [
-          _input(watch.nameController, "Name"),
-          _input(watch.emailController, "Email"),
-          _input(watch.subjectController, "Subject"),
-          _input(watch.messageController, "Message", maxLines: 4),
+          _input(
+            watch.nameController,
+            "Name",
+            focusNode: watch.nameFocus,
+            nextFocus: watch.emailFocus,
+            textInputAction: TextInputAction.next,
+          ),
+
+          _input(
+            watch.emailController,
+            "Email",
+            focusNode: watch.emailFocus,
+            nextFocus: watch.subjectFocus,
+            textInputAction: TextInputAction.next,
+          ),
+
+          _input(
+            watch.subjectController,
+            "Subject",
+            focusNode: watch.subjectFocus,
+            nextFocus: watch.messageFocus,
+            textInputAction: TextInputAction.next,
+          ),
+
+          _input(
+            watch.messageController,
+            "Message",
+            maxLines: 4,
+            focusNode: watch.messageFocus,
+            textInputAction: TextInputAction.done,
+          ),
           SizedBox(height: 20.h),
           SizedBox(
             width: double.infinity,
@@ -204,46 +295,8 @@ class _ContactWebState extends ConsumerState<ContactWeb> with BaseConsumerStatef
       ),
     );
   }
-  Widget _input(
-      TextEditingController controller,
-      String hint, {
-        int maxLines = 1,
-      }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
-      child: TextField(
-        controller: controller,
-        maxLines: maxLines,
-        style: TextStyle(
-          color: Theme.of(context).brightness == Brightness.dark
-              ? Colors.white
-              : const Color(0xFF102A43),
-        ),
-        cursorColor: const Color(0xFFD4AF37),
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: TextStyle(
-            color: (Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : const Color(0xFF102A43))
-                .withValues(alpha: 0.6),
-          ),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.white24
-                  : const Color(0xFFB6C2CF),
-            ),
-          ),
-          focusedBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFFD4AF37)),
-          ),
-        ),
-      ),
-    );
-  }
-}
 
+}
 
 class _InfoCard extends ConsumerWidget {
   final IconData icon;
@@ -263,55 +316,161 @@ class _InfoCard extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context,WidgetRef ref) {
-
+  Widget build(BuildContext context, WidgetRef ref) {
     final watch = ref.watch(homeController);
+
     final isDark = watch.isDarkOn;
-    final textColor = isDark ? Colors.white : const Color(0xFF102A43);
+    final selected = watch.clickContactContainer == index;
+
+    final active = selected || highlight;
+
+    final textColor =
+    isDark ? Colors.white : const Color(0xFF102A43);
 
     return MouseRegion(
-      onEnter: (e){
+      onEnter: (_) {
         watch.changeClickContactMouseContainer(index);
       },
-      onExit: (e){
+      onExit: (_) {
         watch.changeClickContactMouseContainer(-1);
       },
-      child: GestureDetector(
-        onTap: (){
-          watch.changeClickContactContainer(index);
-        },
-        child: Container(
-          // margin: EdgeInsets.only(left: context.width*0.02),
-          padding: EdgeInsets.all(5.r),
-          width: compact ? 250 : 280,
-          constraints: BoxConstraints(minHeight: compact ? 120 : 140),
-          decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF0E2233) : Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            border: (watch.clickContactContainer==index)|| highlight
-                ? Border.all(color: const Color(0xFFD4AF37))
-                : null,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, color: textColor),
-              SizedBox(height: 10.h),
-              Text(
-                title,
-                style: TextStyle(color: textColor.withValues(alpha: 0.7), fontSize: 12),
-              ),
-              SizedBox(height: 6.h),
-              Text(
-                value,
-                style: TextStyle(
-                  color: textColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12.5,
-                ),
-                textAlign: TextAlign.center,
-              ),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 280),
+        curve: Curves.easeOut,
+        width: compact ? 250 : 280,
+        constraints: BoxConstraints(
+          minHeight: compact ? 150 : 170,
+        ),
+
+        transform: Matrix4.translationValues(
+          0,
+          active ? -6 : 0,
+          0,
+        ),
+
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(26),
+
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: isDark
+                ? [
+              const Color(0xFF11253B),
+              const Color(0xFF0B1C2D),
+            ]
+                : [
+              Colors.white,
+              const Color(0xFFF7FAFC),
             ],
+          ),
+
+          border: Border.all(
+            color: active
+                ? const Color(0xFFF5C542)
+                : (isDark
+                ? Colors.white.withValues(alpha: 0.05)
+                : const Color(0xFFE2E8F0)),
+            width: active ? 1.4 : 1,
+          ),
+
+          boxShadow: [
+            BoxShadow(
+              color: active
+                  ? const Color(0xFFF5C542).withValues(alpha: 0.18)
+                  : Colors.black.withValues(
+                alpha: isDark ? 0.28 : 0.08,
+              ),
+              blurRadius: active ? 24 : 14,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
+
+        child: Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(26),
+
+          child: InkWell(
+            borderRadius: BorderRadius.circular(26),
+
+            onTap: () {
+              watch.changeClickContactContainer(index);
+            },
+
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 24,
+              ),
+
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+
+                  /// Icon Circle
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 250),
+
+                    padding: const EdgeInsets.all(12),
+
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+
+                      gradient: LinearGradient(
+                        colors: [
+                          const Color(0xFFF5C542)
+                              .withValues(alpha: active ? 0.32 : 0.18),
+
+                          const Color(0xFFD4AF37)
+                              .withValues(alpha: active ? 0.22 : 0.10),
+                        ],
+                      ),
+
+                      border: Border.all(
+                        color: const Color(0xFFF5C542)
+                            .withValues(alpha: active ? 0.7 : 0.25),
+                      ),
+                    ),
+
+                    child: Icon(
+                      icon,
+                      size: compact ? 19 : 30,
+                      color: const Color(0xFFF5C542),
+                    ),
+                  ),
+
+                  SizedBox(height: 18.h),
+
+                  /// Title
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: textColor.withValues(alpha: 0.7),
+                      fontSize: compact ? 12 : 13,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.4,
+                    ),
+                  ),
+
+                  SizedBox(height: 10.h),
+
+                  /// Value
+                  Text(
+                    value,
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: textColor,
+                      fontWeight: FontWeight.w700,
+                      fontSize: compact ? 14 : 15,
+                      height: 1.5,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),

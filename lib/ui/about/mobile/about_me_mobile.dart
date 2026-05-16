@@ -17,18 +17,69 @@ class AboutMeMobile extends ConsumerWidget {
         Center(
           child: RichText(
             text: TextSpan(
-              style: TextStyle(fontSize: 30, color: textColor, fontWeight: FontWeight.w700),
+              style: TextStyle(
+                fontSize: 32,
+                color: textColor,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 1,
+              ),
               children: [
                 TextSpan(text: watch.aboutTitlePrefix),
-                TextSpan(text: watch.aboutTitleAccent, style: const TextStyle(color: Color(0xFFF5C542))),
+
+                const TextSpan(
+                  text: " Me",
+                  style: TextStyle(
+                    color: Color(0xFFF5C542),
+                  ),
+                ),
               ],
             ),
           ),
         ),
         const SizedBox(height: 14),
-        Text(
-          '${watch.aboutIntro}${watch.aboutExpPrefix}${watch.aboutCompanyOne}${watch.aboutJoin}${watch.aboutCompanyTwo}${watch.aboutExpSuffix}${watch.aboutClosing}',
-          style: TextStyle(color: textColor.withValues(alpha: 0.85), height: 1.55, fontSize: 14),
+        Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 500),
+            child: RichText(
+              textAlign: TextAlign.justify,
+              text: TextSpan(
+                style: TextStyle(
+                  color: textColor.withValues(alpha: 0.88),
+                  height: 1.8,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 0.3,
+                ),
+                children: [
+                  TextSpan(text: watch.aboutIntro),
+
+                  TextSpan(text: watch.aboutExpPrefix),
+
+                  TextSpan(
+                    text: watch.aboutCompanyOne,
+                    style: const TextStyle(
+                      color: Color(0xFFF5C542),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+
+                  TextSpan(text: watch.aboutJoin),
+
+                  TextSpan(
+                    text: watch.aboutCompanyTwo,
+                    style: const TextStyle(
+                      color: Color(0xFFF5C542),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+
+                  TextSpan(text: watch.aboutExpSuffix),
+
+                  TextSpan(text: watch.aboutClosing),
+                ],
+              ),
+            ),
+          ),
         ),
         const SizedBox(height: 18),
         ...watch.aboutMeList.map(

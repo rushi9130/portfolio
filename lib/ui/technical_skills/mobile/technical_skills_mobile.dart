@@ -37,51 +37,196 @@ class TechnicalSkillsMobile extends ConsumerWidget {
         SizedBox(height: 40.h),
 
         for (var i = 0; i < categories.length; i++) ...[
-          if (i > 0) const SizedBox(height: 10),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(14),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    categories[i].title,
-                    style: const TextStyle(
-                      color: Color(0xFFF5C542),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  ...categories[i].skills.map(
-                    (s) => Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(s.name, style: TextStyle(color: body, fontSize: 14)),
-                              Text('${(s.level * 100).toInt()}%', style: TextStyle(color: sub, fontSize: 14)),
-                            ],
-                          ),
-                          const SizedBox(height: 6),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: LinearProgressIndicator(
-                              value: s.level,
-                              minHeight: 8,
-                              backgroundColor:
-                                  isDark ? MobileUiTokens.progressTrackDark : MobileUiTokens.progressTrackLight,
-                              valueColor: const AlwaysStoppedAnimation<Color>(MobileUiTokens.progressValue),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+          if (i > 0) SizedBox(height: 18.h),
+
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(18),
+
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(24),
+
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: isDark
+                    ? [
+                  const Color(0xFF132F4C),
+                  const Color(0xFF0F2235),
+                ]
+                    : [
+                  Colors.white,
+                  const Color(0xFFF4F8FC),
                 ],
               ),
+
+              border: Border.all(
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.08)
+                    : const Color(0xFFD9E2EC),
+              ),
+
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(
+                    alpha: isDark ? 0.30 : 0.08,
+                  ),
+                  blurRadius: 18,
+                  offset: const Offset(0, 8),
+                ),
+
+                BoxShadow(
+                  color: const Color(0xFFF5C542).withValues(alpha: 0.08),
+                  blurRadius: 25,
+                  spreadRadius: 1,
+                ),
+              ],
+            ),
+
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+
+                /// Header
+                Row(
+                  children: [
+
+                    Container(
+                      height: 46,
+                      width: 46,
+
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: const Color(0xFFF5C542).withValues(alpha: 0.12),
+
+                        border: Border.all(
+                          color: const Color(0xFFF5C542).withValues(alpha: 0.35),
+                        ),
+                      ),
+
+                      child: const Icon(
+                        Icons.workspace_premium_rounded,
+                        color: Color(0xFFF5C542),
+                        size: 22,
+                      ),
+                    ),
+
+                    const SizedBox(width: 14),
+
+                    Expanded(
+                      child: Text(
+                        categories[i].title,
+                        style: const TextStyle(
+                          color: Color(0xFFF5C542),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.4,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: 22.h),
+
+                Container(
+                  height: 1,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.transparent,
+                        const Color(0xFFF5C542).withValues(alpha: 0.5),
+                        Colors.transparent,
+                      ],
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 22.h),
+
+                /// Skills
+                ...categories[i].skills.map(
+                      (s) => Padding(
+                    padding: const EdgeInsets.only(bottom: 18),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+
+                            Expanded(
+                              child: Text(
+                                s.name,
+                                style: TextStyle(
+                                  color: body,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+
+                            const SizedBox(width: 12),
+
+                            Text(
+                              '${(s.level * 100).toInt()}%',
+                              style: TextStyle(
+                                color: sub,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        SizedBox(height: 10.h),
+
+                        /// Premium Progress Bar
+                        Container(
+                          height: 5,
+
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: isDark
+                                ? const Color(0xFF1C344D)
+                                : const Color(0xFFD6DFEA),
+                          ),
+
+                          child: Stack(
+                            children: [
+
+                              FractionallySizedBox(
+                                widthFactor: s.level,
+
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Color(0xFFF5C542),
+                                        Color(0xFFD6A419),
+                                      ],
+                                    ),
+
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Color(0xFFF5C542),
+                                        blurRadius: 1,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

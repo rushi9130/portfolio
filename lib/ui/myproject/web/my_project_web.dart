@@ -137,7 +137,7 @@ class _MyProjectWebState extends ConsumerState<MyProjectWeb>
                                 child: CommonText(
                                   maxLines: 2,
                                   title:
-                                      "No ${watch.currentSelectProjectIndex == 1 ? "Mobile" : "Web"} Projects Avilable",
+                                      "No ${watch.currentSelectProjectIndex == 1 ? "Mobile" : "Web"} Projects Available",
                                   textStyle: TextStyle(
                                     color: textColor,
                                     fontSize: maxWidth >= 1200 ? 18 : 15,
@@ -162,124 +162,234 @@ class _MyProjectWebState extends ConsumerState<MyProjectWeb>
                                       onEnter: (v) => watch.changeSelectProjectMouseReginIndex(index),
                                       onExit: (v) => watch.changeSelectProjectMouseReginIndex(-1),
                                       child: AnimatedContainer(
-                                        duration: const Duration(milliseconds: 250),
-                                        curve: Curves.bounceInOut,
-                                        transform: Matrix4.translationValues(
-                                          0,
-                                          isHover ? -12 : 0,
-                                          0,
-                                        ),
+                                        duration: const Duration(milliseconds: 350),
+                                        curve: Curves.easeInOut,
+                                        transform: Matrix4.identity()
+                                          ..translate(0.0, isHover ? -14.0 : 0.0)
+                                          ..scale(isHover ? 1.02 : 1.0),
                                         width: cardWidth,
                                         height: cardHeight,
                                         decoration: BoxDecoration(
-                                          color: isDark
-                                              ? const Color(0xFF0E2239)
-                                              : const Color(0xFFE6EEF8),
-                                          borderRadius: BorderRadius.circular(30.r),
-                                          border: Border.all(
-                                            color: textColor.withValues(alpha: 0.3),
-                                            width: 0.1,
+                                          borderRadius: BorderRadius.circular(32.r),
+
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                            colors: isDark
+                                                ? [
+                                              const Color(0xFF132238),
+                                              const Color(0xFF0D1B2A),
+                                            ]
+                                                : [
+                                              Colors.white,
+                                              const Color(0xFFF7FAFD),
+                                            ],
                                           ),
+
+                                          border: Border.all(
+                                            color: isHover
+                                                ? accent.withValues(alpha: 0.45)
+                                                : Colors.white.withValues(alpha: isDark ? 0.06 : 0.7),
+                                            width: 1,
+                                          ),
+
+                                          boxShadow: [
+
+                                            /// main soft shadow
+                                            BoxShadow(
+                                              color: isDark
+                                                  ? Colors.black.withValues(alpha: 0.22)
+                                                  : const Color(0xFFB8C6DB).withValues(alpha: 0.18),
+                                              blurRadius: isHover ? 22 : 14,
+                                              spreadRadius: -2,
+                                              offset: Offset(0, isHover ? 14 : 8),
+                                            ),
+
+                                            /// top glow
+                                            if (isHover)
+                                              BoxShadow(
+                                                color: accent.withValues(alpha: 0.10),
+                                                blurRadius: 24,
+                                                spreadRadius: -4,
+                                                offset: const Offset(0, 4),
+                                              ),
+                                          ],
                                         ),
                                         child: Column(
                                           children: [
-                                            SizedBox(
-                                              height: cardHeight * 0.32,
-                                              child: Center(
-                                                child: isHover
-                                                    ? Container(
-                                                  height: (cardHeight * 0.16).clamp(70.0, 120.0),
-                                                  width: (cardWidth * 0.72).clamp(150.0, 260.0),
-                                                  decoration: BoxDecoration(
-                                                    border: Border.all(color: accent),
-                                                    borderRadius: BorderRadius.circular(60.r),
-                                                  ),
-                                                  alignment: Alignment.center,
-                                                  child: CommonText(
-                                                    textAlign: TextAlign.center,
-                                                    maxLines: 3,
-                                                    title: "View Project",
-                                                    textStyle: TextStyle(
-                                                      color: accent,
-                                                      fontSize: maxWidth >= 1200 ? 18 : 15,
-                                                      fontWeight: FontWeight.w500,
+
+                                            /// TOP SECTION
+                                            AnimatedContainer(
+                                              duration: const Duration(milliseconds: 350),
+                                              height: cardHeight * 0.34,
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(32.r),
+                                                  topRight: Radius.circular(32.r),
+                                                ),
+                                                gradient: LinearGradient(
+                                                  begin: Alignment.topLeft,
+                                                  end: Alignment.bottomRight,
+                                                  colors: isHover
+                                                      ? [
+                                                    accent.withValues(alpha: 0.28),
+                                                    accent.withValues(alpha: 0.08),
+                                                  ]
+                                                      : isDark
+                                                      ? [
+                                                    const Color(0xFF132F4C),
+                                                    const Color(0xFF0E2239),
+                                                  ]
+                                                      : [
+                                                    const Color(0xFFEAF2FC),
+                                                    const Color(0xFFDCE9F8),
+                                                  ],
+                                                ),
+                                              ),
+                                              child: Stack(
+                                                children: [
+
+                                                  Positioned(
+                                                    top: -40,
+                                                    right: -30,
+                                                    child: AnimatedContainer(
+                                                      duration: const Duration(milliseconds: 400),
+                                                      height: isHover ? 140 : 110,
+                                                      width: isHover ? 140 : 110,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: accent.withValues(alpha: 0.08),
+                                                      ),
                                                     ),
                                                   ),
-                                                )
-                                                    : CommonText(
-                                                  textAlign: TextAlign.center,
-                                                  maxLines: 3,
-                                                  title: item.projectName,
-                                                  textStyle: TextStyle(
-                                                    color: accent,
-                                                    fontSize: maxWidth >= 1200 ? 18 : 15,
-                                                    fontWeight: FontWeight.w500,
+
+                                                  Center(
+                                                    child: AnimatedSwitcher(
+                                                      duration: const Duration(milliseconds: 300),
+                                                      child: isHover
+                                                          ? Container(
+                                                        key: const ValueKey("view"),
+                                                        padding: EdgeInsets.symmetric(
+                                                          horizontal: 28.w,
+                                                          vertical: 14.h,
+                                                        ),
+                                                        decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius.circular(50.r),
+                                                          color: accent.withValues(alpha: 0.12),
+                                                          border: Border.all(
+                                                            color: accent,
+                                                          ),
+                                                        ),
+                                                        child: Row(
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          children: [
+                                                            Icon(
+                                                              Icons.arrow_outward_rounded,
+                                                              color: accent,
+                                                              size: 20,
+                                                            ),
+                                                            SizedBox(width: 8.w),
+                                                            CommonText(
+                                                              title: "View Project",
+                                                              textStyle: TextStyle(
+                                                                color: accent,
+                                                                fontWeight: FontWeight.w700,
+                                                                fontSize: maxWidth >= 1200 ? 17 : 15,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                          : Padding(
+                                                        key: const ValueKey("title"),
+                                                        padding: EdgeInsets.symmetric(horizontal: 15.w),
+                                                        child: CommonText(
+                                                          textAlign: TextAlign.center,
+                                                          maxLines: 4,
+                                                          title: item.projectName,
+                                                          textStyle: TextStyle(
+                                                            color: accent,
+                                                            fontSize: maxWidth >= 1200 ? 19 : 16,
+                                                            fontWeight: FontWeight.bold,
+                                                            letterSpacing: 0.4,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
                                                   ),
-                                                ).paddingAll(10),
+                                                ],
                                               ),
                                             ),
+
+                                            /// BOTTOM CONTENT
                                             Expanded(
-                                              child: Container(
-                                                width: cardWidth,
-                                                decoration: BoxDecoration(
-                                                  color: isDark
-                                                      ? const Color(0xFF0A1628)
-                                                      : Colors.white,
-                                                  borderRadius: BorderRadius.only(
-                                                    bottomLeft: Radius.circular(30.r),
-                                                    bottomRight: Radius.circular(30.r),
-                                                  ),
-                                                ),
-                                                padding: EdgeInsets.symmetric(
-                                                  vertical: 10.h,
-                                                  horizontal: 10.w,
-                                                ),
+                                              child: Padding(
+                                                padding: EdgeInsets.all(20.r),
                                                 child: Column(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
+
+                                                    /// title
                                                     CommonText(
                                                       maxLines: 2,
                                                       title: item.projectName,
                                                       textStyle: TextStyle(
                                                         color: textColor,
-                                                        fontSize: maxWidth >= 1200 ? 16 : 14,
-                                                        fontWeight: FontWeight.bold,
+                                                        fontSize: maxWidth >= 1200 ? 18 : 15,
+                                                        fontWeight: FontWeight.w700,
                                                       ),
                                                     ),
-                                                    SizedBox(height: 10.h),
+
+                                                    SizedBox(height: 12.h),
+
+                                                    /// description
                                                     CommonText(
                                                       title: item.projectDis,
-                                                      maxLines: 3,
+                                                      maxLines: 4,
                                                       textStyle: TextStyle(
+                                                        height: 1.5,
                                                         color: isDark
-                                                            ? Colors.grey
-                                                            : const Color(0xFF5F6C7B),
-                                                        fontSize: maxWidth >= 1200 ? 14 : 12.5,
-                                                        fontWeight: FontWeight.w500,
+                                                            ? Colors.white70
+                                                            : const Color(0xFF526071),
+                                                        fontSize: maxWidth >= 1200 ? 13.5 : 12.5,
+                                                        fontWeight: FontWeight.w400,
                                                       ),
                                                     ),
-                                                    SizedBox(height: 12.h),
+
+                                                    SizedBox(height: 18.h),
+
+                                                    /// technologies
                                                     Expanded(
                                                       child: SingleChildScrollView(
                                                         child: Wrap(
                                                           spacing: 10,
                                                           runSpacing: 10,
                                                           children: item.technoloty.map((ele) {
-                                                            return Container(
+                                                            return AnimatedContainer(
+                                                              duration: const Duration(milliseconds: 250),
                                                               padding: EdgeInsets.symmetric(
+                                                                horizontal: 14.w,
                                                                 vertical: 8.h,
-                                                                horizontal: 10.w,
                                                               ),
                                                               decoration: BoxDecoration(
-                                                                borderRadius:
-                                                                BorderRadius.circular(20.r),
-                                                                color: accent.withValues(alpha: 0.22),
+                                                                borderRadius: BorderRadius.circular(30.r),
+                                                                gradient: LinearGradient(
+                                                                  colors: [
+                                                                    accent.withValues(alpha: 0.18),
+                                                                    accent.withValues(alpha: 0.08),
+                                                                  ],
+                                                                ),
+                                                                border: Border.all(
+                                                                  color: accent.withValues(alpha: 0.28),
+                                                                ),
                                                               ),
                                                               child: CommonText(
                                                                 title: ele,
                                                                 textStyle: TextStyle(
                                                                   fontSize: chipText,
                                                                   color: accent,
+                                                                  fontWeight: FontWeight.w600,
                                                                 ),
                                                               ),
                                                             );

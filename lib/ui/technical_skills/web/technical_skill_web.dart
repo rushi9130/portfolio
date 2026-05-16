@@ -73,7 +73,7 @@ class _TechnicalSkillWebState extends ConsumerState<TechnicalSkillWeb> {
                       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                         maxCrossAxisExtent: cardMaxWidth,
                         crossAxisSpacing: 22.w,
-                        mainAxisSpacing: 22.h,
+                        mainAxisSpacing: 60.h,
                         mainAxisExtent: mainExtent,
                       ),
                       itemCount: watch.skillCategories.length,
@@ -86,8 +86,6 @@ class _TechnicalSkillWebState extends ConsumerState<TechnicalSkillWeb> {
               );
             },
           ),
-
-
         ],
       ),
     );
@@ -107,41 +105,144 @@ class SkillCategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final width = MediaQuery.sizeOf(context).width;
-    final titleSize = width >= 1200 ? 18.0 : 16.0;
-    return Container(
-      padding: EdgeInsets.all(20.r),
+
+    final titleSize = width >= 1200 ? 20.0 : 17.0;
+
+    final bgColor = isDark
+        ? const Color(0xFF10253B)
+        : Colors.white;
+
+    final borderColor = isDark
+        ? Colors.white.withValues(alpha: 0.08)
+        : const Color(0xFFD9E2EC);
+
+    final shadowColor = isDark
+        ? Colors.black.withValues(alpha: 0.45)
+        : Colors.black.withValues(alpha: 0.08);
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeInOut,
+
+      padding: EdgeInsets.all(22.r),
+
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF0F2235) : Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        color: bgColor,
+
+        borderRadius: BorderRadius.circular(28),
+
+        border: Border.all(
+          color: borderColor,
+          width: 1,
+        ),
+
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDark
+              ? [
+            const Color(0xFF132F4C),
+            const Color(0xFF0F2235),
+          ]
+              : [
+            Colors.white,
+            const Color(0xFFF4F8FC),
+          ],
+        ),
+
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.12),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
+            color: shadowColor,
+            blurRadius: 22,
+            offset: const Offset(0, 10),
+          ),
+
+          BoxShadow(
+            color: const Color(0xFFF5C542).withValues(alpha: 0.08),
+            blurRadius: 30,
+            spreadRadius: 1,
           ),
         ],
       ),
+
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// Title
-          Text(
-            category.title,
-            style: TextStyle(
-              color: const Color(0xFFF5C542),
-              fontSize: titleSize,
-              fontWeight: FontWeight.bold,
+
+          /// Header
+          Row(
+            children: [
+
+              Container(
+                height: 48,
+                width: 48,
+
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: const Color(0xFFF5C542).withValues(alpha: 0.12),
+                  border: Border.all(
+                    color: const Color(0xFFF5C542).withValues(alpha: 0.4),
+                  ),
+                ),
+
+                child: const Icon(
+                  Icons.workspace_premium_rounded,
+                  color: Color(0xFFF5C542),
+                  size: 24,
+                ),
+              ),
+
+              const SizedBox(width: 14),
+
+              Expanded(
+                child: Text(
+                  category.title,
+                  style: TextStyle(
+                    color: const Color(0xFFF5C542),
+                    fontSize: titleSize,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          SizedBox(height: 24.h),
+
+          Container(
+            height: 1,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.transparent,
+                  const Color(0xFFF5C542).withValues(alpha: 0.5),
+                  Colors.transparent,
+                ],
+              ),
             ),
           ),
 
-          SizedBox(height: 20.h),
-          Divider(color: isDark ? Colors.white24 : const Color(0xFFE2E8F0), height: 24.h),
-          SizedBox(height: 20.h),
+          SizedBox(height: 24.h),
 
-          /// Multiple skills
-          ...category.skills.map(
-                (skill) => SkillBar(
-              item: SkillItem(skill.name, skill.level),
+          /// Skills
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: category.skills.map(
+                      (skill) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 7),
+                      child: SkillBar(
+                        item: SkillItem(
+                          skill.name,
+                          skill.level,
+                        ),
+                      ),
+                    );
+                  },
+                ).toList(),
+              ),
             ),
           ),
         ],
@@ -230,12 +331,42 @@ class SkillBar extends StatelessWidget {
           SizedBox(height: 9.h),
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: LinearProgressIndicator(
-              value: item.value,
-              minHeight: 10.h,
-              backgroundColor: isDark ? const Color(0xFF1C344D) : const Color(0xFFD6DFEA),
-              valueColor:
-              const AlwaysStoppedAnimation(Color(0xFFBA994A)),
+            child: Container(
+              height: 10.h,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: isDark
+                    ? const Color(0xFF1C344D)
+                    : const Color(0xFFD6DFEA),
+              ),
+
+              child: Stack(
+                children: [
+
+                  FractionallySizedBox(
+                    widthFactor: item.value,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+
+                        gradient: const LinearGradient(
+                          colors: [
+                            Color(0xFFF5C542),
+                            Color(0xFFD6A419),
+                          ],
+                        ),
+
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0xFFF5C542),
+                            blurRadius: 8,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
