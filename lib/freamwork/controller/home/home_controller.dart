@@ -20,6 +20,7 @@ import 'package:personal_portfolio/ui/testimonial/testimonial.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../repository/home/model/technical_models.dart';
+import '../../service/analytics/analytics_service.dart';
 
 final homeController = ChangeNotifierProvider((ref) {
   return getIt<HomeController>();
@@ -27,11 +28,12 @@ final homeController = ChangeNotifierProvider((ref) {
 
 @injectable
 class HomeController extends ChangeNotifier {
-  HomeController(this._firestore) {
+  HomeController(this._firestore, this._analyticsService) {
     initController();
   }
 
   final FirebaseFirestore _firestore;
+  final AnalyticsService _analyticsService;
 
   /// screens
   List<Widget> screens = [
@@ -52,6 +54,7 @@ class HomeController extends ChangeNotifier {
     addTimerForChnageExperties();
     _listenPortfolioContent();
     _listenProjectsCollection();
+    _analyticsService.trackPortfolioVisited();
   }
 
   /// dispose Controller
@@ -98,6 +101,12 @@ class HomeController extends ChangeNotifier {
     if (!isManualScroll) {
       jumpPage(watchIndex);
     }
+
+    // Track skill section view
+    if (newIndex == 3) {
+      _analyticsService.trackSkillSectionViewed('Technical Skills');
+    }
+
     notifyListeners();
   }
 
@@ -600,6 +609,7 @@ class HomeController extends ChangeNotifier {
         'createdAt': FieldValue.serverTimestamp(),
         'isRead': false,
       });
+      _analyticsService.trackContactMessageSent();
     } catch (e) {
       isSending = false;
       notifyListeners();
@@ -735,8 +745,10 @@ class HomeController extends ChangeNotifier {
               '?subject=Contact from Portfolio'
       );
     }else if(index==2){
+      _analyticsService.trackSocialClick('LinkedIn');
       await openLink(linkDinUrl);
     }else{
+      _analyticsService.trackSocialClick('GitHub');
       await openLink(githubUrl);
     }
 

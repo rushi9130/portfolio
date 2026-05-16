@@ -10,6 +10,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:cloud_firestore/cloud_firestore.dart' as _i974;
+import 'package:firebase_analytics/firebase_analytics.dart' as _i398;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:personal_portfolio/freamwork/controller/home/home_controller.dart'
@@ -18,6 +19,8 @@ import 'package:personal_portfolio/freamwork/controller/splash/splash_controller
     as _i1052;
 import 'package:personal_portfolio/freamwork/dependency_injection/module/firebase_module.dart'
     as _i146;
+import 'package:personal_portfolio/freamwork/service/analytics/analytics_service.dart'
+    as _i211;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -31,8 +34,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i974.FirebaseFirestore>(
       () => firebaseModule.getFirebaseFirestoreInstance(),
     );
+    gh.factory<_i398.FirebaseAnalytics>(
+      () => firebaseModule.getFirebaseAnalyticsInstance(),
+    );
+    gh.lazySingleton<_i211.AnalyticsService>(
+      () => _i211.AnalyticsService(gh<_i398.FirebaseAnalytics>()),
+    );
     gh.factory<_i675.HomeController>(
-      () => _i675.HomeController(gh<_i974.FirebaseFirestore>()),
+      () => _i675.HomeController(
+        gh<_i974.FirebaseFirestore>(),
+        gh<_i211.AnalyticsService>(),
+      ),
     );
     return this;
   }

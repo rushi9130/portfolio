@@ -4,6 +4,7 @@ import 'package:personal_portfolio/firebase_options.dart';
 class FirebaseDb {
 
     static Future<void> initFirebase() async {
+
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:personal_portfolio/freamwork/controller/home/home_controller.dart';
+import 'package:personal_portfolio/freamwork/dependency_injection/inject.dart';
 import 'package:personal_portfolio/freamwork/repository/home/model/project_info_model.dart';
+import 'package:personal_portfolio/freamwork/service/analytics/analytics_service.dart';
 import 'package:personal_portfolio/freamwork/utils/extension/context_extension.dart';
 
 void showProjectDialog(
@@ -22,6 +24,9 @@ class ProjectDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context,WidgetRef ref) {
+    // Track project open
+    getIt<AnalyticsService>().trackProjectOpen(projectInfoModel.projectName);
+
     final watch = ref.watch(homeController);
     final isDark = watch.isDarkOn;
     final projectImages = projectInfoModel.mediaAssets

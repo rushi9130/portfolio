@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:personal_portfolio/freamwork/controller/home/home_controller.dart';
+import 'package:personal_portfolio/freamwork/dependency_injection/inject.dart';
+import 'package:personal_portfolio/freamwork/service/analytics/analytics_service.dart';
 import 'package:personal_portfolio/ui/mainpage/mobile/mobile_main_page.dart';
 import 'package:personal_portfolio/ui/utils/helper/base_widget.dart';
 import 'package:personal_portfolio/ui/utils/widgets/common_text.dart';
@@ -131,6 +133,14 @@ class _MainPageState extends ConsumerState<MainPage>
             physics: const BouncingScrollPhysics(),
             onPageChanged: (ind) {
               watch.chnageIndex(ind - 1, isManualScroll: true);
+              
+              // Track screen view
+              if (ind > 0 && ind <= watch.category.length) {
+                final screenName = watch.category[ind - 1];
+                getIt<AnalyticsService>().trackScreenView(screenName);
+              } else if (ind == 0) {
+                getIt<AnalyticsService>().trackScreenView('Home');
+              }
             },
             pageSnapping: true,
             itemCount: watch.screens.length,
